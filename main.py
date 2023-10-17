@@ -1,17 +1,11 @@
 import pygame
-from random import randint
 from config import HEIGHT_SCREEN, WIDTH_SCREEN
 from config import BLACK
 from config import GAME_SPEED
 from config import ON_BOARD, FROM_TOP, QUANTITY_STARS
 from sky import Sky
 
-def check_exit_event():
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            return True
-    
-    return False
+
 
     
 def main():
@@ -25,8 +19,6 @@ def main():
         sky.create_stars(delta_height=ON_BOARD)
     
     while running:
-            if check_exit_event():
-                running = False
             
             sky.create_stars(delta_height=FROM_TOP)
             sky.update()

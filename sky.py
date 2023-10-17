@@ -3,7 +3,7 @@ from star import Star
 import pygame
 from pygame.sprite import Sprite
 from random import randint
-from config import WIDTH_SCREEN, HEIGHT_SCREEN, MAX_STAR_SIZE, FLASH_CURVE_QUANTITY, MAX_FLASH_LEN
+from config import WIDTH_SCREEN, HEIGHT_SCREEN, MAX_STAR_SIZE
 from pygame import SRCALPHA
 
 class Sky(Sprite):
