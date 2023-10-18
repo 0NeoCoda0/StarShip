@@ -3,7 +3,7 @@ from star import Star
 import pygame
 from pygame.sprite import Sprite
 from random import randint
-from config import WIDTH_SCREEN, HEIGHT_SCREEN, MAX_STAR_SIZE
+from config import ON_BOARD, FROM_TOP, WIDTH_SCREEN, HEIGHT_SCREEN, MAX_STAR_SIZE
 from pygame import SRCALPHA
 
 class Sky(Sprite):
@@ -15,6 +15,11 @@ class Sky(Sprite):
         self.stars_coordinates = set()
         self.all_stars = pygame.sprite.Group()
         self.curves = []
+        self.__first_init()
+        
+    def __first_init(self):
+        for _ in range(self.stars_quantity):
+            self.create_star(delta_height=ON_BOARD)
 
     def is_overlapping(self, star_1, star_2):
         x_1, y_1, radius_1 = star_1
@@ -23,7 +28,7 @@ class Sky(Sprite):
         radius_distance = (radius_1 + radius_2)**2
         return star_distance < radius_distance
 
-    def create_stars(self, delta_height):
+    def create_star(self, delta_height):
         if len(self.stars_coordinates) <= self.stars_quantity:
             a, b = delta_height
             x, y = randint(0, WIDTH_SCREEN - MAX_STAR_SIZE), randint(a, b)
@@ -46,6 +51,7 @@ class Sky(Sprite):
             if star.rect.y > HEIGHT_SCREEN:
                 self.stars_coordinates.remove(star.get_coordinates)
                 star.kill()
+        self.create_star(FROM_TOP)
 
     def draw(self, screen):
         self.all_stars.draw(screen)

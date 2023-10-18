@@ -7,29 +7,40 @@ from random import randint, uniform
 from config import STAR_SPEED, MAX_STAR_SIZE, MIN_STAR_SIZE 
 from config import MAX_STARS_FLICKER_SPEED, MIN_STARS_FLICKER_SPEED
 from point import Point
+from speeder import Speeder
 
 
 class Star(Sprite):
     def __init__(self, x, y):
         super().__init__()
-        self.width = randint(MIN_STAR_SIZE, MAX_STAR_SIZE)
-        self.flicker_rate = 2
         
+        #surface
+        self.width = randint(MIN_STAR_SIZE, MAX_STAR_SIZE)
         self.image = Surface([self.width, self.width], SRCALPHA)
         self.rect = self.image.get_rect()
-        self.bright_speed = uniform(MIN_STARS_FLICKER_SPEED ,MAX_STARS_FLICKER_SPEED)
         
+        #colors
         self.red = self.__get_color()
         self.green = self.__get_color()
         self.blue = self.__get_color()
-        self.flash_generator = self.__flash()
         self.ct_color = randint(200, 233)
-        self.bg_brightness = randint(110, 170)
+        self.bg_brightness = randint(160, 210)
         
+        #animations
+        self.flash_generator = self.__flash()
+        self.bright_speed = uniform(MIN_STARS_FLICKER_SPEED ,MAX_STARS_FLICKER_SPEED)
+        
+        #coordinates
         self.rect.y = y
         self.rect.x = x
         self.radius = randint(self.width * 4, self.width * 5)
 
+        #moving
+        self.delta_time = 1 / STAR_SPEED
+        self.speeder = Speeder()
+        self.distance = self.width
+        
+        #first initialization
         self.draw_star()
         
     def __get_color(self):
@@ -38,7 +49,7 @@ class Star(Sprite):
     def __flash(self):
         i = 0
         while True:
-            yield 50 + math.sin(i) ** 2 * 155
+            yield 110 + math.sin(i) ** 2 * 145
             i += self.bright_speed
     
     def __get_bright(self):
@@ -72,7 +83,8 @@ class Star(Sprite):
         line(self.image, center_color, surface.half_center_left(), surface.half_center_right(), line_thickness)
         
     def update(self):
-        self.rect.y += STAR_SPEED + (self.width * 0.1)
+        self.speeder.update()
+        self.rect.y += self.speeder.get_speed(self.distance, self.delta_time)
 
         self.draw_star()  # перерисовываем звезду с новой яркостью
         
