@@ -21,3 +21,9 @@ class Speeder():
             return moving_speed
         else:
             return stand_speed
+        
+    def can_pass(self, delay):
+        if self.now - self.past > delay:
+            self.past = self.now  
+            return True
+        return False
